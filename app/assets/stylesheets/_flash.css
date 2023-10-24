@@ -1,0 +1,10 @@
+@layer components {
+  .flash {
+    @apply absolute top-0 left-0 w-full cursor-pointer;
+
+    .alert {
+      border-radius: 0;
+    }
+  } 
+
+}

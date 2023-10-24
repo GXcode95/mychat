@@ -3,3 +3,6 @@
 @import "tailwindcss/utilities";
 
 @import 'base';
+@import 'buttons';
+@import 'flash';
+@import 'navbar';

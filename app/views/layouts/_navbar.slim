@@ -1,0 +1,15 @@
+nav.nav data-controller="nav"
+  .flex
+    = link_to 'Home', root_path, class: 'nav__item'
+    = link_to 'Page1', root_path, class: 'nav__item'
+    = link_to 'Page2', root_path, class: 'nav__item'
+  .flex.gap-4
+    - if user_signed_in?
+      = button_to 'Sign out',
+                  destroy_user_session_path,
+                  method: :delete,
+                  data: { turbo: false },
+                  class: 'btn btn-outline btn-light'
+    - else
+      = link_to 'Sign in', new_user_session_path, class: 'btn btn-outline btn-primary'
+      = link_to 'Sign up', new_user_registration_path, class: 'btn btn-primary'

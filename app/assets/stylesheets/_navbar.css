@@ -1,0 +1,12 @@
+.nav {
+  @apply flex items-center justify-between bg-neutral-800 p-4;
+
+  &__item {
+    @apply text-white font-bold text-xl px-4;
+    
+    &:first-child {
+      @apply pl-0;
+    }
+  }
+
+}

@@ -1,6 +1,5 @@
-@layer component {
-  .test-class {
-    color: red;
+@layer base {
+  a:hover {
+    @apply text-blue-500;
   }
-
 }
