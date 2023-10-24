@@ -1,14 +1,33 @@
 @layer base {
+  :root {
+    --color-primary: #3b82f6;
+    --color-black: #0a0a0a;
+    --color-white: #fff;
+    --color-secondary: #6366f1;
+    --color-accent: #eab308;
+    --color-danger: #ef4444;
+    --color-info: #06b6d4;
+    --color-success: #22c55e;
+  }
+
   a:hover {
     @apply text-blue-500;
   }
 
-  .inputs {
-    input[type=text],
-    input[type=email],
-    input[type=password] {
-      @apply w-full my-2 p-4 rounded border border-blue-500;
+  
+  input[type=text],
+  input[type=email],
+  input[type=password],
+  textarea {
+    @apply w-full my-2 p-4 rounded border border-blue-500 resize-none;
+
+    &:focus {
+      outline: none;
     }
+  }
+
+  li {
+    list-style: none !important;
   }
 
   .actions {

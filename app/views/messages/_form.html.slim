@@ -1,0 +1,11 @@
+.bg-neutral-800.py-2.px-4 data-controller='message-form'
+  = semantic_form_for(message,
+                      data: { action: 'keydown->message-form#keydown submit->message-form#submit',
+                              'message-form-target': 'form' })do |f|
+    = f.inputs
+      = f.input :room_id, as: :hidden, value: message.room_id
+      = f.input :content,
+                label: false,
+                input_html: { rows: 4,
+                              class: 'bg-neutral-300',
+                              data: { 'message-form-target': 'input' }}

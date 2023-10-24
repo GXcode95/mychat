@@ -1,52 +1,38 @@
 class MessagesController < ApplicationController
-  before_action :set_message, only: %i[show edit update destroy]
-
-  def index
-    @messages = Message.all
-  end
-
-  def show; end
+  before_action :set_message, only: %i[edit update destroy]
 
   def new
     @message = Message.new
   end
 
   def create
-    @message = Message.new(message_params)
-    @message.author = current_user
+    @message = Message.new(message_params.merge(author: current_user))
+    return if @message.save
 
-    if @message.save
-      respond_to do |format|
-        format.html { redirect_to messages_path, notice: 'message was successfully created.' }
-        format.turbo_stream { flash.now[:notice] = 'message was successfully created.' }
-      end
-    else
-      render :new, status: :unprocessable_entity
-    end
+    flash[:error] = @message.errors.full_messages.join("\n")
+    render 'layouts/flash'
   end
 
   def edit; end
 
   def update
-    if @message.update(message_params)
-      redirect_to messages_path, notice: 'message was successfully updated.'
-    else
-      render :edit, status: :unprocessable_entity
-    end
+    return if current_user != message.author
+    return if @message.update(message_params)
+
+    flash[:error] = @message.errors.full_messages.join("\n")
+    render 'layouts/flash'
   end
 
   def destroy
+    return if current_user != @message.author
+
     @message.destroy
-    respond_to do |format|
-      format.html { redirect_to messages_path, notice: 'message was successfully destroyed.' }
-      format.turbo_stream { flash.now[:notice] = 'message was successfully destroyed.' }
-    end
   end
 
   private
 
   def message_params
-    params.require(:message).permit(:id, :content)
+    params.require(:message).permit(:id, :content, :room_id)
   end
 
   def set_message

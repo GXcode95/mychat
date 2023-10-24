@@ -1,0 +1,19 @@
+.msg {
+  @apply p-2 my-2 rounded bg-primary text-white w-3/4;
+
+  &__author {
+    @apply  opacity-50;
+  }
+
+  &__content {
+    @apply whitespace-pre-wrap;
+  }
+  
+  &__actions {
+    @apply hidden;
+  }
+
+  textarea {
+    @apply p-0 m-0 border-0 bg-neutral-900 bg-opacity-40;
+  }
+} 

@@ -1,0 +1,4 @@
+= turbo_stream.update Message.new,
+                      partial: 'messages/form',
+                      locals: { message: Message.new(room_id: @message.room_id) }
+= render_turbo_stream_flash_messages

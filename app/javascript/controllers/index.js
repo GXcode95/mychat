@@ -9,3 +9,12 @@ application.register("removals", RemovalsController)
 
 import NavController from "./nav_controller"
 application.register("nav", NavController)
+
+import MessageFormController from "./message-form_controller"
+application.register("message-form", MessageFormController)
+
+import ScrollToController from "./scroll-to_controller"
+application.register("scroll-to", ScrollToController)
+
+import AutoresizeController from "./autoresize_controller"
+application.register("autoresize", AutoresizeController)

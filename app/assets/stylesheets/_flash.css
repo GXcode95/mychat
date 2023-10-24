@@ -4,7 +4,7 @@
     transform: translateX(-50%);
   
     &__message {
-      @apply text-sm text-neutral-500 py-2 px-4 bg-white;
+      @apply text-sm text-neutral-500 py-2 px-4 bg-white whitespace-pre-wrap;
       
       animation: appear-then-fade 4s both;
     }

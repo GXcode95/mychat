@@ -1,0 +1,16 @@
+= turbo_frame_tag @message ,class: 'flex flex-col'
+  .msg class="msg--#{@message.author_id}" data-controller='message-form scroll-to'
+    p.msg__author = @message.author.email
+    = semantic_form_for(@message, 
+                        data: { action: 'keydown->message-form#keydown submit->message-form#submit',
+                                'message-form-target': 'form' }) do |f|
+      = f.input :content,
+                value: @message.content,
+                label: false,
+                required: false,
+                input_html: { class: 'bg-transparent w-full',
+                              data: { 'message-form-target': 'input',
+                                      controller: 'autoresize' }}
+    .msg__actions
+      = button_to 'delete', message_path(@message), method: :delete
+      = link_to 'edit', edit_message_path(@message)

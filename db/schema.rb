@@ -17,7 +17,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_10_24_113119) do
   create_table "messages", force: :cascade do |t|
     t.bigint "author_id", null: false
     t.bigint "room_id", null: false
-    t.string "content"
+    t.text "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_messages_on_author_id"

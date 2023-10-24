@@ -3,7 +3,7 @@
 # Table name: messages
 #
 #  id         :bigint           not null, primary key
-#  content    :string
+#  content    :text
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  author_id  :bigint           not null
@@ -24,4 +24,6 @@ class Message < ApplicationRecord
   belongs_to :room
 
   validates :content, presence: true, length: { maximum: 500 }
+
+  broadcasts_to ->(message) { [message.room, 'messages'] }, inserts_by: :append
 end

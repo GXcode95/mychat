@@ -5,7 +5,9 @@ class RoomsController < ApplicationController
     @rooms = Room.all
   end
 
-  def show; end
+  def show
+    @message = @room.messages.new
+  end
 
   def new
     @room = Room.new
@@ -13,15 +15,10 @@ class RoomsController < ApplicationController
 
   def create
     @room = Room.new(room_params)
+    return if @room.save
 
-    if @room.save
-      respond_to do |format|
-        format.html { redirect_to rooms_path, notice: 'room was successfully created.' }
-        format.turbo_stream { flash.now[:notice] = 'room was successfully created.' }
-      end
-    else
-      render :new, status: :unprocessable_entity
-    end
+    flash[:error] = @room.errors.full_messages.join("\n")
+    render 'layouts/flash'
   end
 
   def edit; end
@@ -36,10 +33,6 @@ class RoomsController < ApplicationController
 
   def destroy
     @room.destroy
-    respond_to do |format|
-      format.html { redirect_to rooms_path, notice: 'room was successfully destroyed.' }
-      format.turbo_stream { flash.now[:notice] = 'room was successfully destroyed.' }
-    end
   end
 
   private

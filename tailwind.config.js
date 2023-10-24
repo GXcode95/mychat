@@ -15,14 +15,14 @@ module.exports = {
     extend: {
       colors: {
         // ...twColors,
-        primary: "#3b82f6", // blue-500
-        // 'white': '#ffffff',
-        black: '#0a0a0a',
-        secondary: '#6366f1', // indigo-500
-        accent: '#eab308', // yellow-500
-        danger: '#ef4444', // red-500
-        info: '#06b6d4', // cyan-500
-        success: '#22c55e', // green-500
+        primary: "var(--color-primary)",
+        white: "var(--color-white)",
+        black: 'var(--color-black)',
+        secondary: 'var(--color-secondary)',
+        accent: 'var(--color-accent)',
+        danger: 'var(--color-danger)',
+        info: 'var(--color-info)',
+        success: 'var(--color-success)',
       }
     }
   }

@@ -1,0 +1,7 @@
+= turbo_frame_tag message ,class: 'flex flex-col'
+  .msg class="msg--#{message.author_id}" data-controller='scroll-to'
+    p.msg__author = message.author.email
+    p.msg__content = message.content
+    .msg__actions
+      = button_to 'delete', message_path(message), method: :delete
+      = link_to 'edit', edit_message_path(message)

@@ -13,6 +13,7 @@
 #  index_rooms_on_name  (name) UNIQUE
 #
 class Room < ApplicationRecord
+  has_many :messages, dependent: :destroy
   validates :name, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 20 }
 
   scope :public_rooms, -> { where(is_private: false) }

@@ -1,1 +1,9 @@
-h1 = @room.name
+= turbo_stream_from @room, 'messages'
+.w-screen.h-screen.flex.flex-col
+  = turbo_frame_tag 'messages', class: 'flex-1 px-4 overflow-y-scroll'
+    - @room.messages.each do |message|
+      - next if message.new_record?
+      = render message
+
+  = turbo_frame_tag Message.new
+    = render 'messages/form', message: @message 

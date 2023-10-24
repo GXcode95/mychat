@@ -8,7 +8,16 @@ html
 
     = stylesheet_link_tag "application", "data-turbo-track": "reload"
     = javascript_include_tag "application", "data-turbo-track": "reload", defer: true
+    
+    css:
+      .msg--#{current_user&.id} {
+        align-self: end;
+        background: var(--color-secondary);
 
+        .msg__actions {
+          display: block;
+        }
+      }
   body
     #flash.flash
       = render "layouts/flash"
