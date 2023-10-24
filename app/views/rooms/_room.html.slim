@@ -1,0 +1,11 @@
+= turbo_frame_tag room, class: 'flex justify-between items-center px-2'
+  = link_to room.name, room_path(room), data: { turbo_frame: '_top' }, class: 'text-primary font-bold'
+  .flex.gap-4.items-center
+    = link_to 'edit',
+              edit_room_path(room),
+              class: 'btn btn-primary btn-outline',
+              data: { turbo_frame: '_top' }
+    = button_to 'destroy',
+                room_path(room),
+                method: :delete,
+                class: 'btn btn-danger btn-outline'
