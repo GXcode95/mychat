@@ -18,3 +18,6 @@ application.register("scroll-to", ScrollToController)
 
 import AutoresizeController from "./autoresize_controller"
 application.register("autoresize", AutoresizeController)
+
+import HideController from "./hide_controller"
+application.register("hide", HideController)

@@ -1,0 +1,31 @@
+.panel {
+  @apply bg-neutral-800 w-[50px] flex flex-col overflow-hidden  py-2 px-4;
+
+  &__actions {
+    @apply flex justify-center w-full;
+
+    .toggle {
+      @apply text-white cursor-pointer;
+    }
+  }
+
+  &__content {
+    @apply hidden overflow-x-hidden;
+  }
+  
+  &__rooms {
+    @apply flex flex-col gap-3;
+  }
+
+  &.expand {
+    @apply w-fit;
+
+    .panel__content {
+      @apply block;
+    }
+
+    .panel__actions {
+      @apply flex justify-end;
+    }
+  }
+}
