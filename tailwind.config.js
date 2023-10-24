@@ -17,7 +17,7 @@ module.exports = {
         // ...twColors,
         primary: "#3b82f6", // blue-500
         // 'white': '#ffffff',
-        // 'black': '#0a0a0a',
+        black: '#0a0a0a',
         secondary: '#6366f1', // indigo-500
         accent: '#eab308', // yellow-500
         danger: '#ef4444', // red-500

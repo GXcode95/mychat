@@ -1,10 +1,21 @@
 @layer components {
   .flash {
-    @apply absolute top-0 left-0 w-full cursor-pointer bg-white;
-
-    .alert {
-      border-radius: 0;
+    @apply fixed top-0 left-1/2 flex flex-col items-center gap-3 max-w-full w-max py-0 px-4;
+    transform: translateX(-50%);
+  
+    &__message {
+      @apply text-sm text-neutral-500 py-2 px-4 bg-white;
+      
+      animation: appear-then-fade 4s both;
     }
-  } 
+  }
 
+  @keyframes appear-then-fade {
+    0%, 100% {
+      opacity:0
+    }
+    5%, 60% {
+      opacity:1
+    }
+  }
 }
