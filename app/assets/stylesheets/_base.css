@@ -2,4 +2,16 @@
   a:hover {
     @apply text-blue-500;
   }
+
+  .inputs {
+    input[type=text],
+    input[type=email],
+    input[type=password] {
+      @apply w-full my-2 p-4 rounded border border-blue-500;
+    }
+  }
+
+  .actions {
+    @apply my-2
+  }
 }

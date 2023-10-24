@@ -53,9 +53,11 @@ gem 'devise'
 # Provide fake data for seed
 gem 'faker'
 # Improve rails form
-gem 'simple_form'
+# gem 'simple_form'
 # simple form setup for tailwind
 # gem 'simple_form-tailwind'
+# Improve rails form
+gem 'formtastic', '~> 5.0'
 # Icon set from tailwind, need for simple_form-tailwind to work
 gem "heroicon"
 # Use .slim as default views tempalte

@@ -1,0 +1,16 @@
+.flex.min-h-full.flex-col.justify-center.px-6.py-12.lg:px-8
+  .sm:mx-auto.sm:w-full.sm:max-w-sm
+    h2.mt-10.text-center.text-2xl.font-bold.leading-9.tracking-tight.text-gray-900
+      | Sign in to your account
+
+  .mt-10.sm:mx-auto.sm:w-full.sm:max-w-sm
+    = semantic_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+      = f.inputs do
+        = f.input :email, autofocus: true, placeholder: 'email', label: false
+        = f.input :password, label: false, placeholder: 'password'
+        - if devise_mapping.rememberable?
+          = f.input :remember_me, as: :boolean, input_html: { class: 'mr-2' }
+      
+      = f.actions do 
+        = f.action :submit, label: "login", button_html: { class: 'btn btn-primary' }
+    = render "devise/shared/links"
