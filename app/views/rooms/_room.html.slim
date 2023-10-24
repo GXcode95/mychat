@@ -1,6 +1,17 @@
 = turbo_frame_tag room, class: 'flex justify-between items-center px-2'
   = link_to room.name, room_path(room), data: { turbo_frame: '_top' }, class: 'text-primary font-bold'
   .flex.gap-4.items-center
+    - users_room = room.users_rooms.find_by(user_id: current_user.id)
+    - if users_room.nil?
+      = button_to :Join,
+                  users_rooms_path,
+                  class: 'btn btn-success btn-outline',
+                  params: { room_id: room.id }
+    - elsif users_room.accepted?
+      = button_to :Leave,
+                  users_room_path(users_room),
+                  method: :delete,
+                  class: 'btn btn-danger btn-outline'
     = link_to 'edit',
               edit_room_path(room),
               class: 'btn btn-primary btn-outline',

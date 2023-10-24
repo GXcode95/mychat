@@ -14,9 +14,12 @@
 #
 class Room < ApplicationRecord
   has_many :messages, dependent: :destroy
-  validates :name, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 20 }
+  has_many :users_rooms, dependent: :destroy
+  has_many :users, through: :users_rooms
 
   scope :public_rooms, -> { where(is_private: false) }
 
   broadcasts_to ->(_) { 'rooms' }, inserts_by: :append
+
+  validates :name, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 20 }
 end

@@ -12,4 +12,5 @@ Rails.application.routes.draw do
 
   resources :rooms
   resources :messages, except: %i[index show]
+  resources :users_rooms
 end

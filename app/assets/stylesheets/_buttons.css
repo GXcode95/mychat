@@ -2,6 +2,10 @@
   .btn {
     @apply font-bold py-2 px-4 rounded border border-transparent;
     transition: background-color .3s, color .3s, border-color .3s;
+
+    &.disabled {
+      @apply opacity-50 cursor-not-allowed;
+    }
   }
 
   .btn-outline {
@@ -10,10 +14,6 @@
 
   .btn-pills {
     @apply rounded-full;
-  }
-
-  .btn-disabled {
-    @apply opacity-50 cursor-not-allowed;
   }
 
   .btn-primary {

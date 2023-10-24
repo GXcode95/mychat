@@ -23,4 +23,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   scope :all_except, ->(user) { where.not(id: user) }
+
+  has_many :users_rooms
+  has_many :rooms, through: :users_rooms
 end
