@@ -18,14 +18,25 @@
   }
 
   &.expand {
-    @apply w-fit;
+    @apply w-fit min-w-[200px];
 
     .panel__content {
       @apply block;
     }
+  }
 
-    .panel__actions {
-      @apply flex justify-end;
+  &.panel-left {
+    &.expand {
+      .panel__actions {
+        @apply flex justify-end;
+      }
+    }
+  }
+  &.panel-right {
+    &.expand {
+      .panel__actions {
+        @apply flex justify-start;
+      }
     }
   }
 }
