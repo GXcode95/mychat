@@ -1,8 +1,6 @@
-nav.nav data-controller="nav"
+nav.nav data-controller='nav'
   .flex
-    = link_to 'Home', root_path, class: 'nav__item'
-    = link_to 'Page1', root_path, class: 'nav__item'
-    = link_to 'Page2', root_path, class: 'nav__item'
+    = link_to 'Chats', rooms_path, class: 'nav__item'
   .flex.gap-4
     - if user_signed_in?
       = button_to 'Sign out',
