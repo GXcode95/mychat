@@ -28,6 +28,8 @@ html
       - if current_user
         .panel.panel-left.expand data-controller="hide"
           .panel__actions
+              
+            = link_to 'P', edit_user_registration_path, class: 'text-white', data: { turbo_frame: 'main'}
             = link_to 'R', rooms_path, class: 'text-white', data: { turbo_frame: 'main'}
             .toggle data-action="click->hide#hide" X
           .panel__content
