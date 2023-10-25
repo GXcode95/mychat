@@ -8,11 +8,6 @@ class RoomsController < ApplicationController
   def show
     @rooms = Room.all
     @message = @room.messages.new
-
-    respond_to do |format|
-      format.html {  }
-      format.turbo_stream { byebug }
-    end
   end
 
   def new
@@ -21,6 +16,7 @@ class RoomsController < ApplicationController
 
   def create
     @room = Room.new(room_params)
+    build_owner
     return if @room.save
 
     flash[:error] = @room.errors.full_messages.join("\n")
@@ -49,5 +45,9 @@ class RoomsController < ApplicationController
 
   def set_room
     @room = Room.find(params[:id])
+  end
+
+  def build_owner
+    @room.users_rooms.build(user_id: current_user.id, role: :owner, status: :accepted)
   end
 end
