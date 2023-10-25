@@ -19,6 +19,7 @@ html
         }
       }
   body
+    = turbo_stream_from :online_users, channel: OnlineChannel
     #flash.flash
       = render "layouts/flash"
     = render 'layouts/navbar'

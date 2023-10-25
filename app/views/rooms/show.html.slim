@@ -4,9 +4,9 @@
     .panel__actions
       .toggle data-action="click->hide#hide" X
     .panel__content
-      .panel__rooms
+      ul.panel__rooms
         - current_user.rooms.each do |room|
-          = link_to room.name, room_path(room), class: 'text-white'
+          li = link_to room.name, room_path(room), class: 'text-white'
   
   .flex.flex-col.w-full.h-screen
     span.cursor.text-white.self-end.cursor-pointer data-action="click->hide#hide" X
@@ -22,6 +22,8 @@
     .panel__actions
       .toggle data-action="click->hide#hide" X
     .panel__content
-      .panel__rooms
+      ul.panel__rooms
         - @room.users.all_except(current_user).each do |user|
-          .text-white = user.email
+          li class="#{user.online? ? 'text-primary' : 'text-neutral-400'}"
+            = user.email
+          
