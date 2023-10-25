@@ -1,0 +1,2 @@
+= turbo_stream.remove dom_id(@users_room, 'request')
+= turbo_stream.prepend 'room_members', partial: 'users_rooms/users_room', locals: { users_room: @users_room }

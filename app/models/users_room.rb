@@ -25,5 +25,5 @@ class UsersRoom < ApplicationRecord
   belongs_to :room
 
   enum :role, %i[owner admin member]
-  enum :status, %i[accepted]
+  enum :status, %i[accepted pending]
 end

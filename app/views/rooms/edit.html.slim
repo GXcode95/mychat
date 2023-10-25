@@ -1,13 +1,43 @@
 = turbo_frame_tag 'main', class: 'main-box'
-  h2.mt-10.text-center.text-2xl.font-bold.leading-9.tracking-tight.text-gray-900
-    = @room.name
-    | &nbsp;settings
+  .overflow-y-scroll.w-full
+    .mt-10.sm:mx-auto.sm:w-full class="sm:w-1/2"
+      h2.mt-10.text-center.text-2xl.font-bold.leading-9.tracking-tight.text-gray-900.my-4
+        = @room.name
+        | &nbsp;settings
 
-  .mt-10.sm:mx-auto.sm:w-full.sm:max-w-sm
-    = render 'form'
-  
-    - if @room.owner?(current_user)
-      = button_to 'destroy',
-                  room_path(@room),
-                  method: :delete,
-                  class: 'btn btn-danger btn-outline'
+      = render 'form'
+    
+      - if @room.owner?(current_user)
+        = button_to 'destroy',
+                    room_path(@room),
+                    method: :delete,
+                    class: 'btn btn-danger btn-outline'
+
+      h2.mt-10.text-center.text-2xl.font-bold.leading-9.tracking-tight.text-gray-900.my-4
+        | Members
+      ul#room_members
+        - @room.users_rooms.where(status: :accepted).each do |users_room|
+          = render users_room unless users_room.owner?
+
+      h2.mt-10.text-center.text-2xl.font-bold.leading-9.tracking-tight.text-gray-900.my-4
+        | Requests
+      ul
+        - @room.users_rooms.where(status: :pending).each do |users_room|
+          = render users_room unless users_room.owner?
+          
+          
+          / - next if users_room.owner?
+          
+          / = turbo_frame_tag dom_id(users_room, 'request')
+          /   li.flex.justify-between.w-full.items-center.mb-2
+          /     span = users_room.user.email
+          /     .flex.gap-2
+          /       = button_to :Accept,
+          /                   users_room_path(users_room),
+          /                   method: :put,
+          /                   params: { users_room: { status: :accepted }},
+          /                   class: 'btn btn-success btn-outline'
+          /       = button_to :Reject,
+          /                   users_room_path(users_room),
+          /                   method: :delete,
+          /                   class: 'btn btn-danger btn-outline'

@@ -17,6 +17,6 @@
           = link_to 'S', edit_room_path(@room), class: 'text-white', data: { turbo_frame: 'main'}
       .panel__content
         ul.panel__rooms
-          - @room.users.all_except(current_user).each do |user|
+          - @room.accepted_users.all_except(current_user).each do |user|
             li class="#{user.online? ? 'text-primary' : 'text-neutral-400'}"
               = user.email

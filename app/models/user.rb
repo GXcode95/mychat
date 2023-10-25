@@ -29,6 +29,11 @@ class User < ApplicationRecord
   has_many :users_rooms
   has_many :rooms, through: :users_rooms
 
+  has_many :joined_users_rooms, -> { where(status: :accepted) },
+           dependent: :destroy,
+           class_name: :UsersRoom
+  has_many :joined_rooms, through: :joined_users_rooms, source: :room
+
   enum :status, {
     offline: 0,
     online: 1

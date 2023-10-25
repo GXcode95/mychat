@@ -2,11 +2,10 @@ class RoomsController < ApplicationController
   before_action :set_room, only: %i[show edit update destroy]
 
   def index
-    @rooms = Room.all
+    @rooms = Room.public_rooms
   end
 
   def show
-    @rooms = Room.all
     @message = @room.messages.new
   end
 
