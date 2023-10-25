@@ -1,14 +1,12 @@
-= turbo_stream_from 'rooms'
-div class="w-3/4 ml-[12.5%]"
-  h1.mb-6.text-center.font-bold.text-2xl Rooms
+= turbo_frame_tag 'main', class: 'w-full h-screen flex'
+  .px-4.py-2.w-full
+    = link_to 'New room',
+              new_room_path,
+              class: 'btn btn-primary btn-outline',
+              data: { turbo_frame: dom_id(Room.new) }
 
-  = link_to 'New room',
-            new_room_path,
-            class: 'btn btn-primary btn-outline',
-            data: { turbo_frame: dom_id(Room.new) }
+    .mt-4
+      = turbo_frame_tag Room.new
 
-  .mt-4
-    = turbo_frame_tag Room.new
-
-  = turbo_frame_tag 'rooms', class: 'flex flex-col gap-3 mt-6'
-    = render @rooms
+    = turbo_frame_tag 'rooms', class: 'flex flex-col gap-3 mt-6'
+      = render @rooms

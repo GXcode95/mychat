@@ -1,15 +1,6 @@
-= turbo_stream_from @room, 'messages'
-.w-screen.h-screen.flex
-  .panel.panel-left.expand data-controller="hide"
-    .panel__actions
-      .toggle data-action="click->hide#hide" X
-    .panel__content
-      ul.panel__rooms
-        - current_user.rooms.each do |room|
-          li = link_to room.name, room_path(room), class: 'text-white'
-  
+= turbo_frame_tag 'main', class: 'w-full h-screen flex'
+  = turbo_stream_from @room, 'messages'
   .flex.flex-col.w-full.h-screen
-    span.cursor.text-white.self-end.cursor-pointer data-action="click->hide#hide" X
     = turbo_frame_tag 'messages', class: 'flex-1 px-4 overflow-y-scroll'
       - @room.messages.each do |message|
         - next if message.new_record?
@@ -26,4 +17,3 @@
         - @room.users.all_except(current_user).each do |user|
           li class="#{user.online? ? 'text-primary' : 'text-neutral-400'}"
             = user.email
-          

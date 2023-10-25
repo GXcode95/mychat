@@ -16,7 +16,7 @@ class MessagesController < ApplicationController
   def edit; end
 
   def update
-    return if current_user != message.author
+    return if current_user != @message.author
     return if @message.update(message_params)
 
     flash[:error] = @message.errors.full_messages.join("\n")

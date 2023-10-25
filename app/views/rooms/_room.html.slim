@@ -1,7 +1,11 @@
 = turbo_frame_tag room, class: 'flex justify-between items-center px-2'
-  = link_to room.name, room_path(room), data: { turbo_frame: '_top' }, class: 'text-primary font-bold'
+  - users_room = room.users_rooms.find_by(user_id: current_user.id)
+  - if users_room.nil?
+    span.font-bold = room.name
+  - else
+    = link_to room.name, room_path(room), data: { turbo_frame: '_top' }, class: 'text-primary font-bold'
+  
   .flex.gap-4.items-center
-    - users_room = room.users_rooms.find_by(user_id: current_user.id)
     - if users_room.nil?
       = button_to :Join,
                   users_rooms_path,
@@ -12,10 +16,12 @@
                   users_room_path(users_room),
                   method: :delete,
                   class: 'btn btn-danger btn-outline'
-    = link_to 'edit',
-              edit_room_path(room),
-              class: 'btn btn-primary btn-outline',
-              data: { turbo_frame: '_top' }
+    - if users_room&.owner? || users_room&.admin?
+      = link_to 'edit',
+                edit_room_path(room),
+                class: 'btn btn-primary btn-outline',
+                data: { turbo_frame: '_top' }
+    - if users_room&.owner?
     = button_to 'destroy',
                 room_path(room),
                 method: :delete,

@@ -8,6 +8,11 @@ class RoomsController < ApplicationController
   def show
     @rooms = Room.all
     @message = @room.messages.new
+
+    respond_to do |format|
+      format.html {  }
+      format.turbo_stream { byebug }
+    end
   end
 
   def new
