@@ -17,7 +17,17 @@ class Room < ApplicationRecord
   has_many :users_rooms, dependent: :destroy
   has_many :users, through: :users_rooms
 
+  has_one :users_room_owner, -> { where(role: :owner) },
+          dependent: :destroy,
+          class_name: :UsersRoom
+  has_one :owner, through: :users_room_owner, source: :user
+
   scope :public_rooms, -> { where(is_private: false) }
 
   validates :name, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: 20 }
+
+
+  def owner?(user)
+    user == owner
+  end
 end

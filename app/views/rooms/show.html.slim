@@ -1,19 +1,22 @@
-= turbo_frame_tag 'main', class: 'w-full h-screen flex'
-  = turbo_stream_from @room, 'messages'
-  .flex.flex-col.w-full.h-screen
-    = turbo_frame_tag 'messages', class: 'flex-1 px-4 overflow-y-scroll'
-      - @room.messages.each do |message|
-        - next if message.new_record?
-        = render message
+= turbo_frame_tag 'main', class: 'main-box'
+  .flex
+    = turbo_stream_from @room, 'messages'
+    .flex.flex-col.w-full.h-screen
+      = turbo_frame_tag 'messages', class: 'flex-1 px-4 overflow-y-scroll'
+        - @room.messages.each do |message|
+          - next if message.new_record?
+          = render message
 
-    = turbo_frame_tag Message.new
-      = render 'messages/form', message: @message 
+      = turbo_frame_tag Message.new
+        = render 'messages/form', message: @message
 
-  .panel.panel-right.expand data-controller="hide"
-    .panel__actions
-      .toggle data-action="click->hide#hide" X
-    .panel__content
-      ul.panel__rooms
-        - @room.users.all_except(current_user).each do |user|
-          li class="#{user.online? ? 'text-primary' : 'text-neutral-400'}"
-            = user.email
+    .panel.panel-right.expand data-controller="hide"
+      .panel__actions
+        .toggle data-action="click->hide#hide" X
+        - if @room.owner?(current_user)
+          = link_to 'S', edit_room_path(@room), class: 'text-white', data: { turbo_frame: 'main'}
+      .panel__content
+        ul.panel__rooms
+          - @room.users.all_except(current_user).each do |user|
+            li class="#{user.online? ? 'text-primary' : 'text-neutral-400'}"
+              = user.email

@@ -1,8 +1,13 @@
-.flex.min-h-full.flex-col.justify-center.px-6.py-12.lg:px-8
-  .sm:mx-auto.sm:w-full.sm:max-w-sm
-    h2.mt-10.text-center.text-2xl.font-bold.leading-9.tracking-tight.text-gray-900
-      | Update&nbsp;
-      = @room.name
+= turbo_frame_tag 'main', class: 'main-box'
+  h2.mt-10.text-center.text-2xl.font-bold.leading-9.tracking-tight.text-gray-900
+    = @room.name
+    | &nbsp;settings
 
   .mt-10.sm:mx-auto.sm:w-full.sm:max-w-sm
     = render 'form'
+  
+    - if @room.owner?(current_user)
+      = button_to 'destroy',
+                  room_path(@room),
+                  method: :delete,
+                  class: 'btn btn-danger btn-outline'
