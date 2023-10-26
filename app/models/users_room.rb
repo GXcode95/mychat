@@ -26,4 +26,13 @@ class UsersRoom < ApplicationRecord
 
   enum :role, %i[owner admin member]
   enum :status, %i[accepted pending]
+
+  before_create :set_status_and_role, if: ->(users_room) { users_room.room.is_private }
+
+  private
+
+  def set_status_and_role
+    self.status = :accepted
+    self.role = :admin
+  end
 end

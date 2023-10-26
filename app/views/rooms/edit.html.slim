@@ -24,20 +24,3 @@
       ul
         - @room.users_rooms.where(status: :pending).each do |users_room|
           = render users_room unless users_room.owner?
-          
-          
-          / - next if users_room.owner?
-          
-          / = turbo_frame_tag dom_id(users_room, 'request')
-          /   li.flex.justify-between.w-full.items-center.mb-2
-          /     span = users_room.user.email
-          /     .flex.gap-2
-          /       = button_to :Accept,
-          /                   users_room_path(users_room),
-          /                   method: :put,
-          /                   params: { users_room: { status: :accepted }},
-          /                   class: 'btn btn-success btn-outline'
-          /       = button_to :Reject,
-          /                   users_room_path(users_room),
-          /                   method: :delete,
-          /                   class: 'btn btn-danger btn-outline'

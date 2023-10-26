@@ -25,11 +25,10 @@ ActiveRecord::Schema[7.1].define(version: 2023_10_24_211526) do
   end
 
   create_table "rooms", force: :cascade do |t|
-    t.string "name", null: false
+    t.string "name"
     t.boolean "is_private", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["name"], name: "index_rooms_on_name", unique: true
   end
 
   create_table "users", force: :cascade do |t|

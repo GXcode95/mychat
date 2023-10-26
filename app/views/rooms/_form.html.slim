@@ -1,4 +1,4 @@
-= semantic_form_for @room do |f|
+= semantic_form_for @room, data: { turbo_frame: 'main'} do |f|
   = f.inputs
     = f.input :name, label: false, placeholder: 'Name', input_html: { autofocus: true }
   = f.actions

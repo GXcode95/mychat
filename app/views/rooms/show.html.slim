@@ -7,8 +7,8 @@
           - next if message.new_record?
           = render message
 
-      = turbo_frame_tag Message.new
-        = render 'messages/form', message: @message
+      = turbo_frame_tag @room.messages.new
+        = render 'messages/form', message: @message || @room.messages.new
 
     .panel.panel-right.expand data-controller="hide"
       .panel__actions
@@ -19,4 +19,11 @@
         ul.panel__rooms
           - @room.accepted_users.all_except(current_user).each do |user|
             li class="#{user.online? ? 'text-primary' : 'text-neutral-400'}"
-              = user.email
+              span = user.email
+              - if current_user.private_room_with(user)
+                = link_to 'msg', room_path(current_user.private_room_with(user)), class: 'btn btn-pills btn-primary'
+              - else
+                = button_to 'msg', rooms_path,
+                            class: 'btn btn-pills btn-primary',
+                            params: { room: { is_private: true, name: nil },
+                                      user_id: user.id }

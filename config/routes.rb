@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -10,7 +9,11 @@ Rails.application.routes.draw do
   # Defines the root path route ('/')
   root 'rooms#index'
 
-  resources :rooms
+  resources :rooms do
+    collection do
+      post :create_private
+    end
+  end
   resources :messages, except: %i[index show]
   resources :users_rooms
 end

@@ -28,6 +28,9 @@ class User < ApplicationRecord
 
   has_many :users_rooms
   has_many :rooms, through: :users_rooms
+  # has_many :private_rooms, -> { where(room: { is_private: true }) }, through: :, source: :room
+
+  has_many :private_rooms, -> { where('rooms.is_private = ?', true) }, through: :users_rooms, source: :room
 
   has_many :joined_users_rooms, -> { where(status: :accepted) },
            dependent: :destroy,
@@ -38,4 +41,8 @@ class User < ApplicationRecord
     offline: 0,
     online: 1
   }
+
+  def private_room_with(user)
+    private_rooms.joins(:users).find_by(users: { id: user })
+  end
 end
