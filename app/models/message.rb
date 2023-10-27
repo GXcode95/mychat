@@ -20,10 +20,11 @@
 #  fk_rails_...  (room_id => rooms.id)
 #
 class Message < ApplicationRecord
+  MAX_LENGTH = 500
   belongs_to :author, class_name: 'User'
   belongs_to :room
 
-  validates :content, presence: true, length: { maximum: 500 }
+  validates :content, presence: true, length: { maximum: MAX_LENGTH }
 
   broadcasts_to ->(message) { [message.room, 'messages'] }, inserts_by: :append
 end

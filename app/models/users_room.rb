@@ -20,14 +20,20 @@
 #  fk_rails_...  (room_id => rooms.id)
 #  fk_rails_...  (user_id => users.id)
 #
+
 class UsersRoom < ApplicationRecord
+  STATUS = %w[accepted pending].freeze
+  ROLES = %w[owner admin member].freeze
   belongs_to :user
   belongs_to :room
 
-  enum :role, %i[owner admin member]
-  enum :status, %i[accepted pending]
+  enum :role, ROLES
+  enum :status, STATUS
 
   before_create :set_status_and_role, if: ->(users_room) { users_room.room.is_private }
+
+  validates :status, presence: true, inclusion: { in: STATUS }
+  validates :role, presence: true, inclusion: { in: ROLES }
 
   private
 

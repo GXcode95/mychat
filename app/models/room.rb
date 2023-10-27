@@ -9,6 +9,8 @@
 #  updated_at :datetime         not null
 #
 class Room < ApplicationRecord
+  NAME_MAX_LENGTH = 20
+
   has_many :messages, dependent: :destroy
   has_many :users_rooms, dependent: :destroy
   has_many :users, through: :users_rooms
@@ -25,24 +27,21 @@ class Room < ApplicationRecord
 
   scope :public_rooms, -> { where(is_private: false) }
   scope :private_rooms, -> { where(is_private: true) }
+  # scope :by_users, lambda { |*users|
+  #   private_rooms.
+  #     select('rooms.*').
+  #     joins(:users_rooms).
+  #     where(users_rooms: { user_id: users.pluck(:id) }).
+  #     group('rooms.id').
+  #     having('COUNT(users_rooms.user_id) >= ?', users.size)
+  # }
 
   accepts_nested_attributes_for :users_rooms, allow_destroy: true
 
-  validates :name, length: { maximum: 20 }
-  validates :name, presence: true, uniqueness: { case_sensitive: false }, if: -> { !is_private }
+  validates :name, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: NAME_MAX_LENGTH }, if: -> { !is_private }
 
   def owner?(user)
     user == owner
-  end
-
-  def self.by_users(*users)
-    user_ids = users.pluck(:id)
-
-    select('rooms.*, COUNT(users_rooms.user_id)')
-      .joins(:users_rooms)
-      .where(users_rooms: { user_id: user_ids })
-      .group('rooms.id')
-      .having('COUNT(users_rooms.user_id) = ?', user_ids.size)
   end
 
   def is_public?
@@ -52,7 +51,16 @@ class Room < ApplicationRecord
   def display_name_for(current_user = nil)
     return name if is_public?
 
-    recipient = users.find { |user| user == current_user }
+    recipient = users.find { |user| user != current_user }
     recipient.email
+  end
+
+  def self.by_users(*users)
+    private_rooms.
+      select('rooms.*').
+      joins(:users_rooms).
+      where(users_rooms: { user_id: users.pluck(:id) }).
+      group('rooms.id').
+      having('COUNT(users_rooms.user_id) >= ?', users.size).first
   end
 end
