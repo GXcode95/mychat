@@ -31,8 +31,18 @@ html
             = link_to 'R', rooms_path, class: 'text-white', data: { turbo_frame: 'main'}
             .toggle data-action="click->hide#hide" X
           .panel__content
-            ul.panel__rooms
-              - current_user.joined_rooms.each do |room|
-                li = link_to room.name, room_path(room), class: 'text-white', data: { turbo_frame: 'main'}
-      
+            ul.panel__rooms.panel__rooms--public.text-white
+              p Rooms
+              - current_user.joined_public_rooms.each do |room|
+                li 
+                  | -&nbsp;
+                  = link_to room.name, room_path(room), data: { turbo_frame: 'main'}
+            hr.my-4
+            ul.panel__rooms.panel__rooms--private.text-white
+              p Private Messages
+              - current_user.private_rooms.each do |room|
+                li 
+                  | -&nbsp;
+                  = link_to room.display_name_for(current_user), room_path(room), data: { turbo_frame: 'main'}
+
       = yield

@@ -44,4 +44,15 @@ class Room < ApplicationRecord
       .group('rooms.id')
       .having('COUNT(users_rooms.user_id) = ?', user_ids.size)
   end
+
+  def is_public?
+    !is_private
+  end
+
+  def display_name_for(current_user = nil)
+    return name if is_public?
+
+    recipient = users.find { |user| user == current_user }
+    recipient.email
+  end
 end
