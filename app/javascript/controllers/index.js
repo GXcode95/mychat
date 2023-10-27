@@ -7,9 +7,6 @@ import { application } from "./application"
 import RemovalsController from "./removals_controller"
 application.register("removals", RemovalsController)
 
-import NavController from "./nav_controller"
-application.register("nav", NavController)
-
 import MessageFormController from "./message-form_controller"
 application.register("message-form", MessageFormController)
 
