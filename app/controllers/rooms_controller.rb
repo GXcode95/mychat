@@ -21,6 +21,7 @@ class RoomsController < ApplicationController
     else
       build_owner
     end
+
     render :show and return if @room.save
 
     flash[:error] = @room.errors.full_messages.join("\n")

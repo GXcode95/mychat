@@ -44,5 +44,8 @@ html
                 li 
                   | -&nbsp;
                   = link_to room.display_name_for(current_user), room_path(room), data: { turbo_frame: 'main'}
-
+          .panel__user-menu
+            = link_to 'Settings', edit_user_registration_path
+            = button_to 'Logout', destroy_user_session_path, method: :delete
+      
       = yield
