@@ -14,28 +14,28 @@ class RoomsController < ApplicationController
     @room = Room.new
   end
 
+  def edit; end
+
   def create
     @room = Room.new(room_params)
+
     if @room.is_private
       build_users_room
     else
       build_owner
     end
 
-    render :show and return if @room.save
+    redirect_to @room and return if @room.save
 
-    flash[:error] = @room.errors.full_messages.join("\n")
-    render 'layouts/flash'
+    flash.now[:error] = @room.errors.full_messages.join("\n")
+    render 'layouts/flash', status: :unprocessable_entity
   end
 
-  def edit; end
-
   def update
-    if @room.update(room_params)
-      redirect_to rooms_path, notice: 'room was successfully updated.'
-    else
-      render :edit, status: :unprocessable_entity
-    end
+    redirect_to @room and return if @room.update(room_params)
+
+    flash.now[:error] = @room.errors.full_messages.join("\n")
+    render 'layouts/flash', status: :unprocessable_entity
   end
 
   def destroy
@@ -55,7 +55,7 @@ class RoomsController < ApplicationController
   end
 
   def set_user
-    @user = User.find(params[:user_id])
+    @user = User.find_by(id: params[:user_id])
   end
 
   def build_owner

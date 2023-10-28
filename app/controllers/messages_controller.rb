@@ -5,22 +5,22 @@ class MessagesController < ApplicationController
     @message = Message.new
   end
 
+  def edit; end
+
   def create
     @message = Message.new(message_params.merge(author: current_user))
     return if @message.save
 
-    flash[:error] = @message.errors.full_messages.join("\n")
-    render 'layouts/flash'
+    flash.now[:error] = @message.errors.full_messages.join("\n")
+    render 'layouts/flash', status: :unprocessable_entity
   end
-
-  def edit; end
 
   def update
     return if current_user != @message.author
     return if @message.update(message_params)
 
-    flash[:error] = @message.errors.full_messages.join("\n")
-    render 'layouts/flash'
+    flash.now[:error] = @message.errors.full_messages.join("\n")
+    render 'layouts/flash', status: :unprocessable_entity
   end
 
   def destroy
