@@ -30,7 +30,7 @@ class UsersRoom < ApplicationRecord
   enum :role, ROLES
   enum :status, STATUS
 
-  before_create :set_status_and_role, if: ->(users_room) { users_room.room.is_private }
+  before_validation :set_status_and_role, if: ->(users_room) { users_room.room.is_private }
 
   validates :status, presence: true, inclusion: { in: STATUS }
   validates :role, presence: true, inclusion: { in: ROLES }
