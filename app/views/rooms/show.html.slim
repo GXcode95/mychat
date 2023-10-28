@@ -2,6 +2,7 @@
   .flex
     = turbo_stream_from @room, 'messages'
     .flex.flex-col.w-full.h-screen
+      h2 = @room.name
       = turbo_frame_tag 'messages', class: 'flex-1 px-4 overflow-y-scroll'
         - @room.messages.each do |message|
           - next if message.new_record?
