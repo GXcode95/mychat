@@ -9,7 +9,7 @@
           = render message
 
       = turbo_frame_tag @room.messages.new
-        = render 'messages/form', message: @message || @room.messages.new
+        = render 'messages/form', message: @room.messages.new
 
     .panel.panel-right.expand data-controller="hide"
       .panel__actions

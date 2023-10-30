@@ -9,7 +9,8 @@ Rails.application.routes.draw do
   # Defines the root path route ('/')
   root 'rooms#index'
 
-  resources :rooms
-  resources :messages, except: %i[index show]
+  resources :rooms do
+    resources :messages, except: %i[index show]
+  end
   resources :users_rooms
 end

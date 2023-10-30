@@ -44,6 +44,14 @@ class Room < ApplicationRecord
     user == owner
   end
 
+  def member?(user)
+    role_of(user) == 'member'
+  end
+
+  def admin?(user)
+    role_of(user) == 'admin'
+  end
+
   def is_public?
     !is_private
   end
@@ -60,7 +68,11 @@ class Room < ApplicationRecord
       select('rooms.*').
       joins(:users_rooms).
       where(users_rooms: { user_id: users.pluck(:id) }).
-      group('rooms.id').
+      group('rooms.id').  
       having('COUNT(users_rooms.user_id) >= ?', users.size).first
+  end
+
+  def role_of(user)
+    accepted_users_rooms.find_by(user: user)&.role
   end
 end

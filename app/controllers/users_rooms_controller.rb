@@ -1,11 +1,13 @@
 class UsersRoomsController < ApplicationController
-  before_action :set_users_room, only: %i[update destroy]
+  load_and_authorize_resource except: :create
+
   before_action :set_room, only: :create
 
   def create
     @users_room = @room.users_rooms.new(user: current_user,
                                         role: :member,
                                         status: :pending)
+    authorize! :create, @users_room
     @users_room.save
 
     # return if @users_room.save
@@ -25,10 +27,6 @@ class UsersRoomsController < ApplicationController
   end
 
   private
-
-  def set_users_room
-    @users_room = UsersRoom.find(params[:id])
-  end
 
   def users_room_params
     params.require(:users_room).permit(:status, :role)

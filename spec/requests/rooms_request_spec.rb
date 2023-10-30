@@ -1,15 +1,181 @@
 require 'rails_helper'
 
 RSpec.describe RoomsController, type: :request do
-  let!(:room) { create(:room) }
-  let(:user) { create(:user) }
+  let!(:users_room_owner) { create(:users_room_owner) }
+  let(:room) { users_room_owner.room }
+  let(:owner) { users_room_owner.user }
+
+  let!(:users_room_admin) { create(:users_room_admin, room: room) }
+  let(:admin) { users_room_admin.user }
+
+  let!(:users_room_member) { create(:users_room_member, room: room) }
+  let(:member) { users_room_member.user }
+
   let(:other_user) { create(:user) }
+
   let(:valid_attributes) { { name: Faker::Alphanumeric.alpha(number: 10) } }
   let(:private_valid_attributes) { { is_private: true } }
 
-  context 'when user is connected' do
+  context 'when user member' do
     before do
-      sign_in user
+      sign_in member
+    end
+
+    describe 'GET index' do
+      it 'assigns @rooms' do
+        get rooms_path
+        expect(assigns(:rooms)).to eq([room])
+      end
+
+      it 'renders the index template' do
+        get rooms_path
+        expect(response).to render_template(:index)
+      end
+
+      it 'returns status code ok' do
+        get rooms_path
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    describe 'GET show' do
+      it 'assigns @room' do
+        get room_path(room)
+        expect(assigns(:room)).to eq(room)
+      end
+
+      it 'renders the template show' do
+        get room_path(room)
+        expect(response).to render_template(:show)
+      end
+
+      it 'return a status code ok' do
+        get room_path(room)
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    describe 'GET new' do
+      it 'assigns @room' do
+        get new_room_path
+        expect(assigns(:room)).to be_a_new(Room)
+      end
+
+      it 'renders the template new' do
+        get new_room_path
+        expect(response).to render_template(:new)
+      end
+
+      it 'return a status code ok' do
+        get new_room_path
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    describe 'POST create' do
+      context 'with valid params' do
+        context 'when room is public' do
+          it 'creates a room' do
+            params = { room: valid_attributes }
+            expect do
+              post rooms_path(format: :turbo_stream), params: params
+            end.to change(Room, :count).by(1)
+          end
+
+          it 'redirects to to the show of the created room' do
+            params = { room: valid_attributes }
+            post rooms_path(format: :turbo_stream), params: params
+            expect(response).to redirect_to(room_path(Room.last))
+          end
+
+          it 'returns a status code found' do
+            params = { room: valid_attributes }
+            post rooms_path(format: :turbo_stream), params: params
+            expect(response).to have_http_status(:found)
+          end
+        end
+
+        context 'when room is private' do
+          it 'creates a room' do
+            params = {
+              room: {
+                is_private: true
+              },
+              user_id: other_user.id
+            }
+            expect do
+              post rooms_path(format: :turbo_stream), params: params
+            end.to change(Room, :count).by(1)
+          end
+
+          it 'redirects to to the show of the created room' do
+            params = {
+              room: {
+                is_private: true
+              },
+              user_id: other_user.id
+            }
+            post rooms_path(format: :turbo_stream), params: params
+            expect(response).to redirect_to(room_path(Room.last))
+          end
+
+          it 'returns a status code found' do
+            params = {
+              room: {
+                is_private: true
+              },
+              user_id: other_user.id
+            }
+            post rooms_path(format: :turbo_stream), params: params
+            expect(response).to have_http_status(:found)
+          end
+        end
+      end
+
+      context 'with unvalid params' do
+        it 'does not create record' do
+          expect do
+            post rooms_path(format: :turbo_stream), params: { room: { name: nil } }
+          end.to change(Room, :count).by(0)
+        end
+
+        it 'renders flash' do
+          post rooms_path(format: :turbo_stream), params: { room: { name: nil } }
+          expect(response).to render_template('layouts/flash')
+        end
+
+        it 'returns a status code unprocessable_entity' do
+          post rooms_path(format: :turbo_stream), params: { room: { name: nil } }
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+      end
+    end
+
+    describe 'GET edit' do
+      it 'it assigns @room' do
+        expect { get edit_room_path(room) }.to raise_error(CanCan::AccessDenied)
+      end
+    end
+
+    describe 'PUT update' do
+      it 'update a room' do
+        params = { room: { name: 'new name' } }
+        expect do
+          put room_path(room, format: :turbo_stream), params: params
+        end.to raise_error(CanCan::AccessDenied)
+      end
+    end
+
+    describe 'DELETE destroy' do
+      it 'delete the room' do
+        expect { delete room_path(room) }.to raise_error(CanCan::AccessDenied)
+      end
+    end
+  end
+
+  context 'when user owner' do
+    before do
+      sign_in owner
     end
 
     describe 'GET index' do
@@ -168,13 +334,13 @@ RSpec.describe RoomsController, type: :request do
         end
 
         it 'redirects to to the show of the created room' do
-          params = { room: valid_attributes }
+          params = { room: { name: 'new name' } }
           put room_path(room, format: :turbo_stream), params: params
           expect(response).to redirect_to(room_path(room))
         end
 
         it 'returns a status code found' do
-          params = { room: valid_attributes }
+          params = { room: { name: 'new name' } }
           put room_path(room, format: :turbo_stream), params: params
           expect(response).to have_http_status(:found)
         end
@@ -213,6 +379,55 @@ RSpec.describe RoomsController, type: :request do
       it 'returns a status code found' do
         delete room_path(room)
         expect(response).to have_http_status(:found)
+      end
+    end
+  end
+
+  context 'when user admin' do
+    before do
+      sign_in admin
+    end
+
+    describe 'GET edit' do
+      it 'it assigns @room' do
+        get edit_room_path(room)
+        expect(assigns(:room)).to eq(room)
+      end
+
+      it 'renders the template edit' do
+        get edit_room_path(room)
+        expect(response).to render_template(:edit)
+      end
+
+      it 'returns status code ok' do
+        get edit_room_path(room)
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    describe 'PUT update' do
+      it 'update a room' do
+        params = { room: { name: 'new name' } }
+        put room_path(room, format: :turbo_stream), params: params
+        expect(room.reload.name).to eq('new name')
+      end
+
+      it 'redirects to to the show of the created room' do
+        params = { room: valid_attributes }
+        put room_path(room, format: :turbo_stream), params: params
+        expect(response).to redirect_to(room_path(room))
+      end
+
+      it 'returns a status code found' do
+        params = { room: valid_attributes }
+        put room_path(room, format: :turbo_stream), params: params
+        expect(response).to have_http_status(:found)
+      end
+    end
+
+    describe 'DELETE destroy' do
+      it 'delete the room' do
+        expect { delete room_path(room) }.to raise_error(CanCan::AccessDenied)
       end
     end
   end

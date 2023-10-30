@@ -1,9 +1,7 @@
 class MessagesController < ApplicationController
-  before_action :set_message, only: %i[edit update destroy]
+  load_and_authorize_resource
 
-  def new
-    @message = Message.new
-  end
+  # def new; end
 
   def edit; end
 
@@ -16,7 +14,6 @@ class MessagesController < ApplicationController
   end
 
   def update
-    return if current_user != @message.author
     return if @message.update(message_params)
 
     flash.now[:error] = @message.errors.full_messages.join("\n")
@@ -24,8 +21,6 @@ class MessagesController < ApplicationController
   end
 
   def destroy
-    return if current_user != @message.author
-
     @message.destroy
   end
 
@@ -33,9 +28,5 @@ class MessagesController < ApplicationController
 
   def message_params
     params.require(:message).permit(:id, :content, :room_id)
-  end
-
-  def set_message
-    @message = Message.find(params[:id])
   end
 end

@@ -1,5 +1,5 @@
 .bg-neutral-800.py-2.px-4 data-controller='message-form'
-  = semantic_form_for(message,
+  = semantic_form_for([message.room, message],
                       data: { action: 'keydown->message-form#keydown submit->message-form#submit',
                               'message-form-target': 'form' })do |f|
     = f.inputs

@@ -18,6 +18,9 @@ html
           display: block;
         }
       }
+      .msg__actions {
+        display: block;
+      }
   body
     = turbo_stream_from :online_users, channel: OnlineChannel
     #flash.flash

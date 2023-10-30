@@ -1,18 +1,15 @@
 class RoomsController < ApplicationController
-  before_action :set_room, only: %i[show edit update destroy]
+  load_and_authorize_resource
+
   before_action :set_user, only: %i[create]
 
   def index
     @rooms = Room.public_rooms
   end
 
-  def show
-    @message = @room.messages.new
-  end
+  def show; end
 
-  def new
-    @room = Room.new
-  end
+  def new; end
 
   def edit; end
 
@@ -48,10 +45,6 @@ class RoomsController < ApplicationController
 
   def room_params
     params.require(:room).permit(:id, :name, :is_private)
-  end
-
-  def set_room
-    @room = Room.find(params[:id])
   end
 
   def set_user
