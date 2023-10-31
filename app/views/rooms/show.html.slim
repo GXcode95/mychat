@@ -6,25 +6,20 @@
       = turbo_frame_tag 'messages', class: 'flex-1 px-4 overflow-y-scroll'
         - @room.messages.each do |message|
           - next if message.new_record?
-          = render message
+          = turbo_frame_tag message, class: 'flex flex-col'
+            = render MessageComponent.new(message)
 
       = turbo_frame_tag @room.messages.new
-        = render 'messages/form', message: @room.messages.new
+        = render EditorComponent.new(@room.messages.new)
 
-    .panel.panel-right.expand data-controller="hide"
-      .panel__actions
-        .toggle data-action="click->hide#hide" X
-        - if can?(:update, @room)
-          = link_to 'S', edit_room_path(@room), class: 'text-white', data: { turbo_frame: 'main'}
-      .panel__content
-        ul.panel__rooms
+    = render PanelComponent.new(variant: :right, user: current_user, room: @room) do |c|
+      - c.with_section do
+        = render PanelSectionComponent.new(title: 'Members') do |sc|
           - @room.accepted_users.all_except(current_user).each do |user|
-            li class="#{user.online? ? 'text-primary' : 'text-neutral-400'}"
-              span = user.email
-              - if current_user.private_room_with(user)
-                = link_to 'msg', room_path(current_user.private_room_with(user)), class: 'btn btn-pills btn-primary'
-              - else
-                = button_to 'msg', rooms_path,
-                            class: 'btn btn-pills btn-primary',
-                            params: { room: { is_private: true, name: nil },
-                                      user_id: user.id }
+            - sc.with_item do
+              li class="#{user.online? ? 'text-primary' : 'text-neutral-400'}"
+                - if @current_user.private_room_with(user)
+                  = link_to user.email, room_path(@current_user.private_room_with(user))
+                - else
+                  = button_to user.email, rooms_path, params: { room: { is_private: true, name: nil },
+                                                                user_id: user.id }

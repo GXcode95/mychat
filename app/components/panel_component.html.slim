@@ -1,0 +1,8 @@
+div(*@attributes)
+  = panel_actions
+  .panel__content.text-white
+    - sections.each do |section|
+      = section
+      - if sections.last != section
+        hr.my-4
+  = user_menu if @variant == :left

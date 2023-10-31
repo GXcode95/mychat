@@ -32,6 +32,9 @@ end
 RSpec.configure do |config|
   config.include Rails.application.routes.url_helpers, type: :request
   config.include Devise::Test::IntegrationHelpers, type: :request # to sign_in user by Devise
+  config.include ViewComponent::TestHelpers, type: :component
+  config.include ViewComponent::SystemTestHelpers, type: :component
+  config.include Capybara::RSpecMatchers, type: :component
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"

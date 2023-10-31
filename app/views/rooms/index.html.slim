@@ -4,9 +4,10 @@
               new_room_path,
               class: 'btn btn-primary btn-outline',
               data: { turbo_frame: dom_id(Room.new) }
-
     .mt-4
       = turbo_frame_tag Room.new
 
     = turbo_frame_tag 'rooms', class: 'flex flex-col gap-3 mt-6'
-      = render @rooms
+      - @rooms.each do |room|
+        = turbo_frame_tag room
+          = render RoomComponent.new(room, user: current_user)

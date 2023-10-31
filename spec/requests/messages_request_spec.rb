@@ -69,16 +69,16 @@ RSpec.describe MessagesController, type: :request do
           expect(response.media_type).to eq Mime[:turbo_stream]
         end
 
-        it 'returns a turbo_stream tag with replace action' do
+        it 'returns a turbo_stream tag with update action' do
           params = { message: valid_attributes }
           post room_messages_path(room, format: :turbo_stream), params: params
           expect(response.body).to include('<turbo-stream action="update" target="new_message">')
         end
 
-        it 'returns a turbo_stream tag with append action' do
+        it 'returns a turbo_stream tag with replace action' do
           params = { message: valid_attributes }
           post room_messages_path(room, format: :turbo_stream), params: params
-          expect(response.body).to include('<turbo-stream action="prepend" target="flash">')
+          expect(response.body).to include('<turbo-stream action="replace" target="flash">')
         end
 
         it 'returns a status code found' do
@@ -125,10 +125,10 @@ RSpec.describe MessagesController, type: :request do
             expect(message.reload.content).to eq(valid_attributes[:content])
           end
 
-          it 'returns an empty body' do
+          it 'renders a turbo_stream with update action' do
             params = { message: valid_attributes }
             put room_message_path(room, message, format: :turbo_stream), params: params
-            expect(response.body).to include("<turbo-stream action=\"replace\" target=\"message_#{message.id}\">")
+            expect(response.body).to include("<turbo-stream action=\"update\" target=\"message_#{message.id}\">")
           end
 
           it 'returns a status code ok' do
@@ -234,11 +234,10 @@ RSpec.describe MessagesController, type: :request do
           expect(message.reload.content).to eq(valid_attributes[:content])
         end
 
-        it 'returns an empty body' do
+        it 'renders a turbo_stream with update action' do
           params = { message: valid_attributes }
           put room_message_path(room, message, format: :turbo_stream), params: params
-          expect(response.body).to include("<turbo-stream action=\"replace\" target=\"message_#{message.id}\">")
-
+          expect(response.body).to include("<turbo-stream action=\"update\" target=\"message_#{message.id}\">")
         end
 
         it 'returns a status code ok' do
@@ -324,11 +323,10 @@ RSpec.describe MessagesController, type: :request do
           expect(message.reload.content).to eq(valid_attributes[:content])
         end
 
-        it 'returns an empty body' do
+        it 'renders a turbo_stream with update action' do
           params = { message: valid_attributes }
           put room_message_path(room, message, format: :turbo_stream), params: params
-          expect(response.body).to include("<turbo-stream action=\"replace\" target=\"message_#{message.id}\">")
-
+          expect(response.body).to include("<turbo-stream action=\"update\" target=\"message_#{message.id}\">")
         end
 
         it 'returns a status code ok' do

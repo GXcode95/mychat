@@ -12,15 +12,12 @@
                     room_path(@room),
                     method: :delete,
                     class: 'btn btn-danger btn-outline'
+      - if can?(:update, @room)
+        = render UserListComponent.new(users_rooms: @room.users_rooms.where(status: :accepted),
+                                      title: 'Members',
+                                      list_attributes: { id: 'rooms_member'},
+                                      class: 'mt-10 my-4')
 
-      h2.mt-10.text-center.text-2xl.font-bold.leading-9.tracking-tight.text-gray-900.my-4
-        | Members
-      ul#room_members
-        - @room.users_rooms.where(status: :accepted).each do |users_room|
-          = render users_room unless users_room.owner?
-
-      h2.mt-10.text-center.text-2xl.font-bold.leading-9.tracking-tight.text-gray-900.my-4
-        | Requests
-      ul
-        - @room.users_rooms.where(status: :pending).each do |users_room|
-          = render users_room unless users_room.owner?
+        = render UserListComponent.new(users_rooms: @room.users_rooms.where(status: :pending),
+                                      title: 'Requests',
+                                      class: 'mt-10 my-4')

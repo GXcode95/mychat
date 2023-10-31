@@ -1,10 +1,10 @@
 require 'rails_helper'
-COUNT = 3
 
 RSpec.describe Room, type: :model do
   let(:public_room) { create(:room) }
   let!(:public_users_room_owner) { create(:users_room_owner, room: public_room) }
   let!(:public_users_room_member) { create(:users_room_member, room: public_room) }
+  let!(:public_users_room_admin) { create(:users_room_admin, room: public_room) }
 
   let(:private_room) { create(:private_room) }
   let!(:private_users_room_member) { create(:users_room_member, room: private_room) }
@@ -81,9 +81,7 @@ RSpec.describe Room, type: :model do
         expect(public_room.display_name_for(member)).to eq(public_room.name)
       end
     end
-  end
 
-  describe 'display_name_for' do
     context 'when room is private' do
       it 'return the email of the other user in the room' do
         member1, member2 = private_room.users
@@ -99,13 +97,41 @@ RSpec.describe Room, type: :model do
   describe 'owner?(user)' do
     context 'when user is owner' do
       it 'return true' do
-        public_room.owner?(public_room)
+        public_room.owner?(public_room.owner)
       end
     end
 
     context 'when user is not owner' do
       it 'return false' do
-        public_room.owner?(private_room)
+        public_room.owner?(public_users_room_member.user)
+      end
+    end
+  end
+
+  describe 'member?(user)' do
+    context 'when user is member' do
+      it 'return true' do
+        public_room.member?(public_users_room_member.user)
+      end
+    end
+
+    context 'when user is not member' do
+      it 'return false' do
+        public_room.member?(public_room.owner)
+      end
+    end
+  end
+
+  describe 'admin?(user)' do
+    context 'when user is admin' do
+      it 'return true' do
+        public_room.admin?(public_users_room_admin.user)
+      end
+    end
+
+    context 'when user is not admin' do
+      it 'return false' do
+        public_room.admin?(public_room.owner)
       end
     end
   end

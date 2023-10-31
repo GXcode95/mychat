@@ -144,9 +144,9 @@ RSpec.describe UsersRoomsController, type: :request do
         expect { users_room_pending.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
 
-      it 'returns a turbo_stream tag with replace action' do
+      it 'returns a turbo_stream tag with update action' do
         delete users_room_path(users_room_pending, format: :turbo_stream)
-        expect(response.body).to include("<turbo-stream action=\"replace\" target=\"room_#{users_room_pending.room.id}\"")
+        expect(response.body).to include("<turbo-stream action=\"update\" target=\"room_#{users_room_pending.room.id}\"")
       end
 
       it 'returns a turbo_stream tag with remove action' do
@@ -239,9 +239,9 @@ RSpec.describe UsersRoomsController, type: :request do
         expect { users_room_pending.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
 
-      it 'returns a turbo_stream tag with replace action' do
+      it 'returns a turbo_stream tag with update action' do
         delete users_room_path(users_room_pending, format: :turbo_stream)
-        expect(response.body).to include("<turbo-stream action=\"replace\" target=\"room_#{users_room_pending.room.id}\"")
+        expect(response.body).to include("<turbo-stream action=\"update\" target=\"room_#{users_room_pending.room.id}\"")
       end
 
       it 'returns a turbo_stream tag with remove action' do
@@ -301,9 +301,9 @@ RSpec.describe UsersRoomsController, type: :request do
         end.to change(room.users_rooms, :count).by(1)
       end
 
-      it 'returns a turbo_stream tag with replace action' do
+      it 'returns a turbo_stream tag with update action' do
         post users_rooms_path(format: :turbo_stream), params: { room_id: room.id }
-        expect(response.body).to include("<turbo-stream action=\"replace\" target=\"room_#{room.id}\">")
+        expect(response.body).to include("<turbo-stream action=\"update\" target=\"room_#{room.id}\">")
       end
 
       it 'responds with turbo_stream' do

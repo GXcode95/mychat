@@ -1,4 +1,5 @@
-= turbo_stream.update Message.new,
-                      partial: 'messages/form',
-                      locals: { message: Message.new(room_id: @message.room_id) }
+- editor_component = EditorComponent.new(Message.new(room_id: @message.room_id))
+= turbo_stream_action_tag(:update,
+                          target: dom_id(Message.new),
+                          template: render(editor_component, content_type: 'text/html'))
 = render_turbo_stream_flash_messages

@@ -3,8 +3,11 @@ SimpleCov.start 'rails' do
   add_filter '/test/'
   add_filter '/config/'
   add_filter '/vendor/'
+  add_filter 'app/mailers/application_mailer.rb'
+  add_filter 'app/jobs/application_job.rb'
 
   add_group 'Controllers', 'app/controllers'
+  add_group 'Components', 'app/components'
   add_group 'Models', 'app/models'
 end
 

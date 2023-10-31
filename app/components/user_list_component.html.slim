@@ -1,0 +1,5 @@
+div(*@attributes)
+  = title
+  ul(*@list_attributes)
+    - @users_rooms.each do |users_room|
+      = render UserListItemComponent.new(users_room) unless users_room.owner?

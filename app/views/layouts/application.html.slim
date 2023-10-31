@@ -23,32 +23,21 @@ html
       }
   body
     = turbo_stream_from :online_users, channel: OnlineChannel
-    #flash.flash
-      = render "layouts/flash"
+    = render FlashComponent.new(flash)
+    / #flash.flash
+    /   = render "layouts/flash"
     
     .w-screen.h-screen.flex
       - if current_user
-        .panel.panel-left.expand data-controller="hide"
-          .panel__actions 
-            = link_to 'P', edit_user_registration_path, class: 'text-white', data: { turbo_frame: 'main'}
-            = link_to 'R', rooms_path, class: 'text-white', data: { turbo_frame: 'main'}
-            .toggle data-action="click->hide#hide" X
-          .panel__content
-            ul.panel__rooms.panel__rooms--public.text-white
-              p Rooms
+        = render PanelComponent.new(variant: :left, user: current_user, class: 'expand') do |c|
+          - c.with_section do
+            = render(PanelSectionComponent.new(title: 'Rooms', list_attributes: { class: 'panel__section panel__section--public-rooms' })) do |c|
               - current_user.joined_public_rooms.each do |room|
-                li 
-                  | -&nbsp;
-                  = link_to room.name, room_path(room), data: { turbo_frame: 'main'}
-            hr.my-4
-            ul.panel__rooms.panel__rooms--private.text-white
-              p Private Messages
+                - c.with_item do
+                  li = link_to "- #{room.name}", room_path(room), data: { turbo_frame: 'main'}
+          - c.with_section do
+            = render(PanelSectionComponent.new(title: 'Private message', list_attributes: { class: 'panel__section panel__section--private-rooms' })) do |c|
               - current_user.private_rooms.each do |room|
-                li 
-                  | -&nbsp;
-                  = link_to room.display_name_for(current_user), room_path(room), data: { turbo_frame: 'main'}
-          .panel__user-menu
-            = link_to 'Settings', edit_user_registration_path
-            = button_to 'Logout', destroy_user_session_path, method: :delete
-      
+                - c.with_item do
+                  li = link_to "- #{room.display_name_for(current_user)}", room_path(room), data: { turbo_frame: 'main'}
       = yield

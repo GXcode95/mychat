@@ -1,1 +1,4 @@
-= turbo_stream.replace @message
+- message_component = MessageComponent.new(@message)
+= turbo_stream_action_tag(:update,
+                          target: dom_id(@message),
+                          template: render(message_component, content_type: 'text/html'))

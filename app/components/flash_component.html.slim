@@ -1,0 +1,4 @@
+div(*@attributes)
+  - @flash.each do |flash_type, message|
+    div(*attributes_for(flash_type)) 
+      = message

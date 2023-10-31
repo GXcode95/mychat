@@ -24,6 +24,6 @@ FactoryBot.define do
     factory :users_room_owner, traits: [:owner]
     factory :users_room_admin, traits: [:admin]
     factory :users_room_member, traits: [:member]
-    factory :users_room_pending, traits: [:member]
+    factory :users_room_pending, traits: %i[member pending]
   end
 end
