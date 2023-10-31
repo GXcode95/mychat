@@ -43,7 +43,7 @@ class UsersRoom < ApplicationRecord
 
   def set_status_and_role
     self.status = :accepted
-    self.role = :admin
+    self.role = :member
   end
 
   def room_is_not_full

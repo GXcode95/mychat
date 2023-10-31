@@ -24,8 +24,8 @@ RSpec.describe User, type: :model do
   let(:user) { create(:user) }
   let(:other_user) { create(:user) }
   let(:private_room) { create(:private_room) }
-  let!(:user_users_room) { create(:users_room_admin, user: user, room: private_room) }
-  let!(:other_user_users_room) { create(:users_room_admin, user: other_user, room: private_room) }
+  let!(:user_users_room) { create(:users_room_member, user: user, room: private_room) }
+  let!(:other_user_users_room) { create(:users_room_member, user: other_user, room: private_room) }
 
   describe 'Create a record' do
     it 'is valid' do

@@ -7,7 +7,7 @@
 
       = render 'form'
     
-      - if @room.owner?(current_user)
+      - if can?(:destroy, @room)
         = button_to 'destroy',
                     room_path(@room),
                     method: :delete,

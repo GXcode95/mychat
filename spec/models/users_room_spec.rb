@@ -7,8 +7,8 @@ RSpec.describe UsersRoom, type: :model do
   let(:users_room_pending) { create(:users_room_pending, room: users_room_owner.room) }
 
   let(:private_room) { create(:private_room) }
-  let!(:private_room_user1) { create(:users_room_admin, room_id: private_room.id) }
-  let!(:private_room_user2) { create(:users_room_admin, room_id: private_room.id) }
+  let!(:private_room_user1) { create(:users_room_member, room_id: private_room.id) }
+  let!(:private_room_user2) { create(:users_room_member, room_id: private_room.id) }
 
   describe 'Create a record' do
     context 'factories' do
@@ -57,15 +57,15 @@ RSpec.describe UsersRoom, type: :model do
           users_room.send(:set_status_and_role)
 
           expect(users_room).to be_valid
-          expect(users_room.role).to eq('admin')
+          expect(users_room.role).to eq('member')
           expect(users_room.status).to eq('accepted')
         end
       end
 
       context 'and is full' do
         it 'is not valid' do
-          users_room = private_room.users_rooms.new(status: :accepted, role: :admin, user: users_room_owner.user)
-          create(:users_room, status: :accepted, role: :admin, room_id: private_room.id, user: users_room_owner.user)
+          users_room = private_room.users_rooms.new(status: :accepted, role: :member, user: users_room_owner.user)
+          create(:users_room, status: :accepted, role: :member, room_id: private_room.id, user: users_room_owner.user)
           expect(users_room).to_not be_valid
         end
       end

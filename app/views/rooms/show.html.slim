@@ -14,7 +14,7 @@
     .panel.panel-right.expand data-controller="hide"
       .panel__actions
         .toggle data-action="click->hide#hide" X
-        - if @room.owner?(current_user)
+        - if can?(:update, @room)
           = link_to 'S', edit_room_path(@room), class: 'text-white', data: { turbo_frame: 'main'}
       .panel__content
         ul.panel__rooms
