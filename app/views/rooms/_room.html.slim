@@ -7,7 +7,6 @@
   
   .flex.gap-4.items-center
     - if users_room.nil?
-      / - byebug
       = button_to :Join,
                   users_rooms_path,
                   class: 'btn btn-success btn-outline',

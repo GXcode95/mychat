@@ -35,13 +35,20 @@ class UsersRoom < ApplicationRecord
   validates :status, presence: true, inclusion: { in: STATUS }
   validates :role, presence: true, inclusion: { in: ROLES }
   validates :role, uniqueness: { scope: :room_id }, if: -> { owner? }
-
   validates :user_id, presence: true, uniqueness: { scope: :room_id }
+
+  validate :room_is_not_full, on: :create
 
   private
 
   def set_status_and_role
     self.status = :accepted
     self.role = :admin
+  end
+
+  def room_is_not_full
+    return if room.nil? || room.is_public? || room.users_rooms.size <= 2
+
+    errors.add(:room, 'This room is private and full.')
   end
 end

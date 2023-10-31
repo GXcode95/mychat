@@ -21,7 +21,6 @@ class RoomsController < ApplicationController
     else
       build_owner
     end
-
     redirect_to @room and return if @room.save
 
     flash.now[:error] = @room.errors.full_messages.join("\n")
