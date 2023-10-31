@@ -12,7 +12,7 @@ RSpec.describe UsersRoomsController, type: :request do
 
   let(:users_room_pending) { create(:users_room_pending, room: room) }
 
-  let(:other_user) { create(:user)}
+  let(:other_user) { create(:user) }
 
   let(:valid_attributes) { { status: :accepted, role: :owner } }
 
@@ -172,7 +172,7 @@ RSpec.describe UsersRoomsController, type: :request do
     end
 
     describe 'PUT update' do
-      context 'with valid params' do
+      context 'on a room member' do
         it 'update the users_room' do
           params = {
             room_id: users_room_pending.room.id,
@@ -218,50 +218,17 @@ RSpec.describe UsersRoomsController, type: :request do
         end
       end
 
-      context 'with unvalid params' do
-        it 'does not update record' do
+      context 'on the room owner' do
+        it 'raise an error CanCan::AccessDenied' do
           params = {
-            room_id: users_room_pending.room.id,
+            room_id: users_room_owner.room.id,
             users_room: {
-              status: nil
+              role: 'member'
             }
           }
           expect do
-            put users_room_path(users_room_pending, format: :turbo_stream), params: params
-          end.to_not change(users_room_pending, :status)
-        end
-
-        it 'renders the template layouts/flash' do
-          params = {
-            room_id: users_room_pending.room.id,
-            users_room: {
-              status: nil
-            }
-          }
-          put users_room_path(users_room_pending, format: :turbo_stream), params: params
-          expect(response).to render_template('layouts/flash')
-        end
-
-        it 'responds with turbo_stream' do
-          params = {
-            room_id: users_room_pending.room.id,
-            users_room: {
-              status: nil
-            }
-          }
-          put users_room_path(users_room_pending, format: :turbo_stream), params: params
-          expect(response.media_type).to eq Mime[:turbo_stream]
-        end
-
-        it 'returns a status code unprocessable_entity' do
-          params = {
-            room_id: users_room_pending.room.id,
-            users_room: {
-              status: nil
-            }
-          }
-          put users_room_path(users_room_pending, format: :turbo_stream), params: params
-          expect(response).to have_http_status(:unprocessable_entity)
+            put users_room_path(users_room_owner, format: :turbo_stream), params: params
+          end.to raise_error(CanCan::AccessDenied)
         end
       end
     end
