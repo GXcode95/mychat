@@ -17,28 +17,25 @@ class Room < ApplicationRecord
 
   has_many :accepted_users_rooms, -> { where(status: :accepted) },
            dependent: :destroy,
-           class_name: :UsersRoom
+           class_name: :UsersRoom,
+           inverse_of: :room
   has_many :accepted_users, through: :accepted_users_rooms, source: :user
 
   has_one :users_room_owner, -> { where(role: :owner) },
           dependent: :destroy,
-          class_name: :UsersRoom
+          class_name: :UsersRoom,
+          inverse_of: :room
   has_one :owner, through: :users_room_owner, source: :user
 
   scope :public_rooms, -> { where(is_private: false) }
   scope :private_rooms, -> { where(is_private: true) }
-  # scope :by_users, lambda { |*users|
-  #   private_rooms.
-  #     select('rooms.*').
-  #     joins(:users_rooms).
-  #     where(users_rooms: { user_id: users.pluck(:id) }).
-  #     group('rooms.id').
-  #     having('COUNT(users_rooms.user_id) >= ?', users.size)
-  # }
 
   accepts_nested_attributes_for :users_rooms, allow_destroy: true
 
-  validates :name, presence: true, uniqueness: { case_sensitive: false }, length: { maximum: NAME_MAX_LENGTH }, if: -> { !is_private }
+  validates :name, presence: true,
+                   uniqueness: { case_sensitive: false },
+                   length: { maximum: NAME_MAX_LENGTH },
+                   if: -> { !is_private }
 
   def owner?(user)
     user == owner

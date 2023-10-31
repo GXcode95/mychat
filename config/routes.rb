@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   root 'rooms#index'
 
   resources :rooms do
-    resources :messages, except: %i[index show]
+    resources :messages, except: %i[index show new]
   end
-  resources :users_rooms
+  resources :users_rooms, only: %i[create update destroy]
 end

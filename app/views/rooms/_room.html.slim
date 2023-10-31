@@ -11,11 +11,6 @@
                   users_rooms_path,
                   class: 'btn btn-success btn-outline',
                   params: { room_id: room.id }
-    - elsif users_room.owner?
-      = link_to 'edit',
-                edit_room_path(room),
-                class: 'btn btn-primary btn-outline',
-                data: { turbo_frame: 'main' }
     - elsif users_room.accepted?
       = button_to :Leave,
                   users_room_path(users_room),

@@ -15,12 +15,7 @@ class RoomsController < ApplicationController
 
   def create
     @room = Room.new(room_params)
-
-    if @room.is_private
-      build_users_room
-    else
-      build_owner
-    end
+    build_users_rooms
     redirect_to @room and return if @room.save
 
     flash.now[:error] = @room.errors.full_messages.join("\n")
@@ -50,11 +45,11 @@ class RoomsController < ApplicationController
     @user = User.find_by(id: params[:user_id])
   end
 
-  def build_owner
-    @room.users_rooms.build(user_id: current_user.id, role: :owner, status: :accepted)
-  end
-
-  def build_users_room
-    @room.users_rooms.build([{ user: @user }, { user: current_user }])
+  def build_users_rooms
+    if @room.is_private?
+      @room.users_rooms.build([{ user: @user }, { user: current_user }])
+    else
+      @room.users_rooms.build(user_id: current_user.id, role: :owner, status: :accepted)
+    end
   end
 end

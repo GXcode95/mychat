@@ -26,18 +26,19 @@ class User < ApplicationRecord
 
   scope :all_except, ->(user) { where.not(id: user) }
 
-  has_many :users_rooms
+  has_many :users_rooms, dependent: :destroy
   has_many :rooms, through: :users_rooms
 
-  has_many :public_rooms, -> { where('rooms.is_private = ?', false) }, through: :users_rooms, source: :room
+  has_many :public_rooms, -> { where(rooms: { is_private: false }) },
+           through: :users_rooms, source: :room
 
   has_many :joined_users_rooms, -> { where(status: :accepted) },
-           dependent: :destroy,
-           class_name: :UsersRoom
+           dependent: :destroy, class_name: :UsersRoom, inverse_of: :user
   has_many :joined_rooms, through: :joined_users_rooms, source: :room
-
-  has_many :private_rooms, -> { where('rooms.is_private = ?', true) }, through: :joined_users_rooms, source: :room
-  has_many :joined_public_rooms, -> { where('rooms.is_private = ?', false) }, through: :joined_users_rooms, source: :room
+  has_many :private_rooms, -> { where(rooms: { is_private: true }) },
+           through: :joined_users_rooms, source: :room
+  has_many :joined_public_rooms, -> { where(rooms: { is_private: false }) },
+           through: :joined_users_rooms, source: :room
 
   enum :status, {
     offline: 0,
