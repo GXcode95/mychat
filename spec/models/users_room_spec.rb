@@ -58,5 +58,12 @@ RSpec.describe UsersRoom, type: :model do
         end
       end
     end
+
+    context 'with role owner when there is already an owner' do
+      it 'it is not valid' do
+        users_room = build(:users_room, room_id: users_room_owner.room.id, role: :owner)
+        expect(users_room).to_not be_valid
+      end
+    end
   end
 end

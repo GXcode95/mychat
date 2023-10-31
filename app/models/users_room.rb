@@ -34,6 +34,7 @@ class UsersRoom < ApplicationRecord
 
   validates :status, presence: true, inclusion: { in: STATUS }
   validates :role, presence: true, inclusion: { in: ROLES }
+  validates :role, uniqueness: { scope: :room_id }, if: -> { owner? }
 
   validates :user_id, presence: true, uniqueness: { scope: :room_id }
 
