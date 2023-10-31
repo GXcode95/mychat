@@ -35,6 +35,8 @@ class UsersRoom < ApplicationRecord
   validates :status, presence: true, inclusion: { in: STATUS }
   validates :role, presence: true, inclusion: { in: ROLES }
 
+  validates :user_id, presence: true, uniqueness: { scope: :room_id }
+
   private
 
   def set_status_and_role

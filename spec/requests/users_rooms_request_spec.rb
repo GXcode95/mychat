@@ -12,6 +12,8 @@ RSpec.describe UsersRoomsController, type: :request do
 
   let(:users_room_pending) { create(:users_room_pending, room: room) }
 
+  let(:other_user) { create(:user)}
+
   let(:valid_attributes) { { status: :accepted, role: :owner } }
 
   context 'when current user is owner of the room' do
@@ -21,25 +23,24 @@ RSpec.describe UsersRoomsController, type: :request do
 
     describe 'POST create' do
       it 'creates a users_room' do
+        # expect do
+        # end.to raise_error(CanCan::AccessDenied)
         expect do
           post users_rooms_path(format: :turbo_stream), params: { room_id: room.id }
-        end.to change(room.users_rooms, :count).by(1)
+        end.to_not change(room.users_rooms, :count)
       end
 
-      it 'returns a turbo_stream tag with replace action' do
+      it 'render the template flash' do
         post users_rooms_path(format: :turbo_stream), params: { room_id: room.id }
-        expect(response.body).to include("<turbo-stream action=\"replace\" target=\"room_#{room.id}\">")
+        expect(response).to render_template('layouts/flash')
       end
 
-      it 'responds with turbo_stream' do
+      it 'respond with turbo_stream' do
         post users_rooms_path(format: :turbo_stream), params: { room_id: room.id }
-        expect(response.media_type).to eq Mime[:turbo_stream]
+        expect(response.media_type).to eq(Mime[:turbo_stream])
       end
 
-      it 'returns a status code found' do
-        post users_rooms_path(format: :turbo_stream), params: { room_id: room.id }
-        expect(response).to have_http_status(:ok)
-      end
+    #TODO RAISE ERROR
     end
 
     describe 'PUT update' do
@@ -170,29 +171,6 @@ RSpec.describe UsersRoomsController, type: :request do
       sign_in admin
     end
 
-    describe 'POST create' do
-      it 'creates a users_room' do
-        expect do
-          post users_rooms_path(format: :turbo_stream), params: { room_id: room.id }
-        end.to change(room.users_rooms, :count).by(1)
-      end
-
-      it 'returns a turbo_stream tag with replace action' do
-        post users_rooms_path(format: :turbo_stream), params: { room_id: room.id }
-        expect(response.body).to include("<turbo-stream action=\"replace\" target=\"room_#{room.id}\">")
-      end
-
-      it 'responds with turbo_stream' do
-        post users_rooms_path(format: :turbo_stream), params: { room_id: room.id }
-        expect(response.media_type).to eq Mime[:turbo_stream]
-      end
-
-      it 'returns a status code found' do
-        post users_rooms_path(format: :turbo_stream), params: { room_id: room.id }
-        expect(response).to have_http_status(:ok)
-      end
-    end
-
     describe 'PUT update' do
       context 'with valid params' do
         it 'update the users_room' do
@@ -321,6 +299,34 @@ RSpec.describe UsersRoomsController, type: :request do
       sign_in member
     end
 
+    describe 'PUT update' do
+      it 'update the users_room' do
+        params = {
+          room_id: users_room_pending.room.id,
+          users_room: {
+            status: :accepted
+          }
+        }
+        expect do
+          put users_room_path(users_room_pending, format: :turbo_stream), params: params
+        end.to raise_error(CanCan::AccessDenied)
+      end
+    end
+
+    describe 'DELETE destroy' do
+      it 'delete the room' do
+        expect do
+          delete users_room_path(users_room_pending, format: :turbo_stream)
+        end.to raise_error(CanCan::AccessDenied)
+      end
+    end
+  end
+
+  context 'when user is not related to the room' do
+    before do
+      sign_in other_user
+    end
+
     describe 'POST create' do
       it 'creates a users_room' do
         expect do
@@ -341,28 +347,6 @@ RSpec.describe UsersRoomsController, type: :request do
       it 'returns a status code found' do
         post users_rooms_path(format: :turbo_stream), params: { room_id: room.id }
         expect(response).to have_http_status(:ok)
-      end
-    end
-
-    describe 'PUT update' do
-      it 'update the users_room' do
-        params = {
-          room_id: users_room_pending.room.id,
-          users_room: {
-            status: :accepted
-          }
-        }
-        expect do
-          put users_room_path(users_room_pending, format: :turbo_stream), params: params
-        end.to raise_error(CanCan::AccessDenied)
-      end
-    end
-
-    describe 'DELETE destroy' do
-      it 'delete the room' do
-        expect do
-          delete users_room_path(users_room_pending, format: :turbo_stream)
-        end.to raise_error(CanCan::AccessDenied)
       end
     end
   end

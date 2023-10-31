@@ -49,7 +49,7 @@ RSpec.describe UsersRoom, type: :model do
     context 'when room is private' do
       context 'when status or role is missing' do
         it 'it set status and role to default values and is valid' do
-          users_room = build(:users_room, status: nil, role: nil, room: create(:private_room))
+          users_room = build(:users_room, status: nil, role: nil, room: create(:private_room), user: users_room_owner.user)
           users_room.send(:set_status_and_role)
 
           expect(users_room).to be_valid

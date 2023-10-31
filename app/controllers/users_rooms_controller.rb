@@ -8,11 +8,10 @@ class UsersRoomsController < ApplicationController
                                         role: :member,
                                         status: :pending)
     authorize! :create, @users_room
-    @users_room.save
+    return if @users_room.save
 
-    # return if @users_room.save
-    # flash.now[:error] = @users_room.errors.full_messages.join("\n")
-    # render 'layouts/flash'
+    flash.now[:error] = @users_room.errors.full_messages.join("\n")
+    render 'layouts/flash'
   end
 
   def update
