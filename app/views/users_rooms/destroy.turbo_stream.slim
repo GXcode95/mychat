@@ -1,5 +1,0 @@
-- room_component = RoomComponent.new(@users_room.room, user: current_user)
-= turbo_stream_action_tag(:update,
-                          target: @users_room.room,
-                          template: render(room_component, content_type: 'text/html')) 
-= turbo_stream.remove dom_id(@users_room, 'member')

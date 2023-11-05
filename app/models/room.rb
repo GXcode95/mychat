@@ -30,6 +30,10 @@ class Room < ApplicationRecord
   scope :public_rooms, -> { where(is_private: false) }
   scope :private_rooms, -> { where(is_private: true) }
 
+  after_destroy_commit ->(room) { broadcast_remove_to(:online_users, target: "panel-room-#{room.id}") }
+  after_create_commit ->(room) { room.broadcast_append_for_each_users }
+  after_update_commit ->(room) { room.broacast_replace_for_each_users }
+
   accepts_nested_attributes_for :users_rooms, allow_destroy: true
 
   validates :name, presence: true,
@@ -65,11 +69,30 @@ class Room < ApplicationRecord
       select('rooms.*').
       joins(:users_rooms).
       where(users_rooms: { user_id: users.pluck(:id) }).
-      group('rooms.id').  
+      group('rooms.id').
       having('COUNT(users_rooms.user_id) >= ?', users.size).first
   end
 
   def role_of(user)
     accepted_users_rooms.find_by(user: user)&.role
+  end
+
+  def broadcast_append_for_each_users
+    target = is_private? ? 'panel_private_rooms' : 'panel_public_rooms'
+    users.each do |user|
+      broadcast_append_to("user_#{user.id}",
+                          target: target,
+                          partial: 'rooms/panel_room',
+                          locals: { room: self, user: user })
+    end
+  end
+
+  def broacast_replace_for_each_users
+    accepted_users.each do |user|
+      broadcast_replace_to("user_#{user.id}",
+                           target: "panel-room-#{id}",
+                           partial: 'rooms/panel_room',
+                           locals: { room: self, user: user })
+    end
   end
 end

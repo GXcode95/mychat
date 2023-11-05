@@ -26,5 +26,5 @@ class Message < ApplicationRecord
 
   validates :content, presence: true, length: { maximum: MAX_LENGTH }
 
-  broadcasts_to ->(message) { [message.room, 'messages'] }, inserts_by: :append
+  broadcasts_to ->(message) { "room_#{message.room_id}_show" }, inserts_by: :append
 end

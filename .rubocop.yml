@@ -74,7 +74,7 @@ Layout/FirstHashElementIndentation:
   EnforcedStyle: consistent
 
 Layout/LineLength:
-  Max: 100 # Default is 80
+  Max: 120 # Default is 80
   Exclude:
     - config/*.rb
 

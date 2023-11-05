@@ -24,20 +24,23 @@ html
   body
     = turbo_stream_from :online_users, channel: OnlineChannel
     = render FlashComponent.new(flash)
-    / #flash.flash
-    /   = render "layouts/flash"
-    
+
     .w-screen.h-screen.flex
       - if current_user
+        = turbo_stream_from "user_#{current_user.id}"
         = render PanelComponent.new(variant: :left, user: current_user, class: 'expand') do |c|
           - c.with_section do
-            = render(PanelSectionComponent.new(title: 'Rooms', list_attributes: { class: 'panel__section panel__section--public-rooms' })) do |c|
+            = render(PanelSectionComponent.new(title: 'Rooms',
+                                               list_attributes: { class: 'panel__section panel__section--public-rooms',
+                                                                  id: 'panel_public_rooms' })) do |c|
               - current_user.joined_public_rooms.each do |room|
                 - c.with_item do
-                  li = link_to "- #{room.name}", room_path(room), data: { turbo_frame: 'main'}
+                  = render PanelRoomComponent.new(room, user: current_user)
           - c.with_section do
-            = render(PanelSectionComponent.new(title: 'Private message', list_attributes: { class: 'panel__section panel__section--private-rooms' })) do |c|
+            = render(PanelSectionComponent.new(title: 'Private message',
+                                               list_attributes: { class: 'panel__section panel__section--private-rooms',
+                                                                  id: 'panel_private_rooms' })) do |c|
               - current_user.private_rooms.each do |room|
                 - c.with_item do
-                  li = link_to "- #{room.display_name_for(current_user)}", room_path(room), data: { turbo_frame: 'main'}
+                  = render PanelRoomComponent.new(room, user: current_user)
       = yield

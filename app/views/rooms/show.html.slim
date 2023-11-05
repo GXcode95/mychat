@@ -1,6 +1,7 @@
 = turbo_frame_tag 'main', class: 'main-box'
   .flex
-    = turbo_stream_from @room, 'messages'
+    / = turbo_stream_from @room, 'messages'
+    = turbo_stream_from "room_#{@room.id}_show"
     .flex.flex-col.w-full.h-screen
       h2 = @room.name
       = turbo_frame_tag 'messages', class: 'flex-1 px-4 overflow-y-scroll'
@@ -14,12 +15,7 @@
 
     = render PanelComponent.new(variant: :right, user: current_user, room: @room) do |c|
       - c.with_section do
-        = render PanelSectionComponent.new(title: 'Members') do |sc|
+        = render PanelSectionComponent.new(title: 'Members', list_attributes: { id: 'panel_users' }) do |sc|
           - @room.accepted_users.all_except(current_user).each do |user|
             - sc.with_item do
-              li class="#{user.online? ? 'text-primary' : 'text-neutral-400'}"
-                - if @current_user.private_room_with(user)
-                  = link_to user.email, room_path(@current_user.private_room_with(user))
-                - else
-                  = button_to user.email, rooms_path, params: { room: { is_private: true, name: nil },
-                                                                user_id: user.id }
+              = render PanelUserComponent.new(user, current_user: @current_user)

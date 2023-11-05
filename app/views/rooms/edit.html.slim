@@ -1,4 +1,5 @@
 = turbo_frame_tag 'main', class: 'main-box'
+  = turbo_stream_from "room_#{@room.id}_settings"
   .overflow-y-scroll.w-full
     .mt-10.sm:mx-auto.sm:w-full class="sm:w-1/2"
       h2.mt-10.text-center.text-2xl.font-bold.leading-9.tracking-tight.text-gray-900.my-4
@@ -20,4 +21,5 @@
 
         = render UserListComponent.new(users_rooms: @room.users_rooms.where(status: :pending),
                                       title: 'Requests',
+                                      list_attributes: { id: "room_#{@room.id}_requests"},
                                       class: 'mt-10 my-4')

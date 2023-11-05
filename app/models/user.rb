@@ -44,8 +44,21 @@ class User < ApplicationRecord
     offline: 0,
     online: 1
   }
+  after_update_commit ->(user) { user.broadcast_replace_status_to_each_users },
+                      if: ->(user) { user.previous_changes[:status] }
 
   def private_room_with(user)
     private_rooms.joins(:users).find_by(users: { id: user })
+  end
+
+  def broadcast_replace_status_to_each_users
+    rooms.each do |room|
+      room.accepted_users.all_except(self).each do |room_user|
+        broadcast_replace_to("room_#{room.id}_show",
+                             target: "panel_user_#{id}",
+                             partial: 'users/panel_user',
+                             locals: { user: self, current_user: room_user })
+      end
+    end
   end
 end

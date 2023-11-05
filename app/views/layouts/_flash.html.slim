@@ -1,3 +1,1 @@
-- flash.each do |flash_type, message|
-  .flash__message data-controller="removals" data-action="animationend->removals#remove click->removals#remove"
-    = message
+= render FlashComponent.new(flash)

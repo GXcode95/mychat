@@ -1,5 +1,0 @@
-= turbo_stream.remove dom_id(@users_room, 'request')
-- users_room_component = UserListItemComponent.new(@users_room)
-= turbo_stream_action_tag(:prepend,
-                          target: 'room_members',
-                          template: render(users_room_component, content_type: 'text/html'))

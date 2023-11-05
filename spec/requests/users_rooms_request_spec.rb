@@ -23,8 +23,6 @@ RSpec.describe UsersRoomsController, type: :request do
 
     describe 'POST create' do
       it 'creates a users_room' do
-        # expect do
-        # end.to raise_error(CanCan::AccessDenied)
         expect do
           post users_rooms_path(format: :turbo_stream), params: { room_id: room.id }
         end.to_not change(room.users_rooms, :count)
@@ -39,8 +37,6 @@ RSpec.describe UsersRoomsController, type: :request do
         post users_rooms_path(format: :turbo_stream), params: { room_id: room.id }
         expect(response.media_type).to eq(Mime[:turbo_stream])
       end
-
-    #TODO RAISE ERROR
     end
 
     describe 'PUT update' do
